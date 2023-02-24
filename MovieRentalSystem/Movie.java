@@ -1,6 +1,6 @@
 package MovieRentalSystem;
 
-import ContextObjects.UnmarshaledRequest;
+import ContextObjects.PostRequestContext;
 
 public class Movie {
     public static final int CHILDRENS = 2;
