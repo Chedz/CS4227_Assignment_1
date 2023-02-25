@@ -44,8 +44,38 @@ public class MovieRentalSystem {
     }
 
     public Customer createCustomer(String name ){
-        System.out.println("[LOG]: " + "Added new Customer: " + name );
-        return new Customer(name);
+        System.out.println("[LOG]: " + "Adding new Customer: " + name );
+
+        //Pre create customer context object creation
+        PreRequestContext createCustomerContext = new PreRequestContext() {
+
+            @Override
+            public void startTimer() {
+                timeMilliseconds = System.currentTimeMillis();
+            }
+            
+        };
+        loggingDispatcher.onPreMarshalRequest(createCustomerContext);
+
+        try {
+            Customer customer = new Customer(name);
+
+            PostRequestContext postRequestContext = new PostRequestContext() {
+
+                @Override
+                public long stopTimer() {
+                    return System.currentTimeMillis() - timeMilliseconds;
+                }
+                
+            };
+            //post create customer
+            loggingDispatcher.dispatchLoggingInterceptorPostMarshal(postRequestContext);
+
+            return customer;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public Rental createRental(Movie movie, int daysRented ){
@@ -53,21 +83,42 @@ public class MovieRentalSystem {
         return new Rental(movie, daysRented);
     }
 
-    public Boolean addRental(Customer customer, Rental rental ){
+    public String addRental(Customer customer, Rental rental ){
 
         System.out.println("[LOG]: " + "MovieRentalSystem.addRental() called adding new Rental to Customer: " + customer.getName() + " with Movie: " + rental.getMovie().getTitle() + " for " + rental.getDaysRented() + " days");
+
+        PreRequestContext addRentalContext = new PreRequestContext() {
+
+            @Override
+            public void startTimer() {
+                timeMilliseconds = System.currentTimeMillis();
+            }
+            
+        };
+        loggingDispatcher.onPreMarshalRequest(addRentalContext);
 
         //print frequent renter points before request
         System.out.println("[LOG]: " + "Initial Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
         try {
             customer.addRental(rental);
             //print frequent renter points after request
-            System.out.println("[LOG]: " + "Final Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
+            System.out.println("[LOG]: " + "Updated Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
         } catch (Exception e) {
-            return false;
+            return e.getMessage();
         }
+
+        PostRequestContext postRequestContext = new PostRequestContext() {
+
+            @Override
+            public long stopTimer() {
+                return System.currentTimeMillis() - timeMilliseconds;
+            }
+            
+        };
+        //post add rental
+        loggingDispatcher.dispatchLoggingInterceptorPostMarshal(postRequestContext);
         
-        return true;
+        return "Rental added successfully";
     }
 
     public String getStringStatement(Customer customer ){

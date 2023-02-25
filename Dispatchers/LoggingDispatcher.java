@@ -47,13 +47,8 @@ public class LoggingDispatcher implements LoggingInterceptor{
         }
     }
 
-    // public static LoggingDispatcher theInstance() {
-    //     return new LoggingDispatcher();
-    // }
-
     @Override
     public void onPostMarshalRequest(PostRequestContext context) {
-        // TODO Auto-generated method stub
         for (int i = 0; i < interceptors_.size(); i++) {
             LoggingInterceptor interceptor = (LoggingInterceptor) interceptors_.elementAt(i);
             interceptor.onPostMarshalRequest(context);
