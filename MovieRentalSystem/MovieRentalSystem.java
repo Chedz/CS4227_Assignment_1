@@ -32,7 +32,7 @@ public class MovieRentalSystem {
             
         };
         //pre movie creation
-        loggingDispatcher.onPreMarshalRequest(preMovieCreationContext);
+        loggingDispatcher.onPreRequest(preMovieCreationContext);
         Movie newMovie = new Movie(name, priceCode);
         //Post movie creation context object creation
         PostRequestContext postRequestContext = new PostRequestContext() {
@@ -44,7 +44,7 @@ public class MovieRentalSystem {
             
         };
         //post movie creation
-        loggingDispatcher.dispatchLoggingInterceptorPostMarshal(postRequestContext);
+        loggingDispatcher.dispatchLoggingInterceptorPostTargetRequest(postRequestContext);
         return newMovie;
     }
 
@@ -65,7 +65,7 @@ public class MovieRentalSystem {
             }
             
         };
-        loggingDispatcher.onPreMarshalRequest(createCustomerContext);
+        loggingDispatcher.onPreRequest(createCustomerContext);
 
         try {
             Customer customer = new Customer(name);
@@ -79,7 +79,7 @@ public class MovieRentalSystem {
                 
             };
             //post create customer
-            loggingDispatcher.dispatchLoggingInterceptorPostMarshal(postRequestContext);
+            loggingDispatcher.dispatchLoggingInterceptorPostTargetRequest(postRequestContext);
 
             return customer;
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class MovieRentalSystem {
             }
             
         };
-        loggingDispatcher.onPreMarshalRequest(addRentalContext);
+        loggingDispatcher.onPreRequest(addRentalContext);
 
         //print frequent renter points before request
         LOGGER.getLogger(MovieRentalSystem.class.getName()).info("Initial Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
@@ -130,7 +130,7 @@ public class MovieRentalSystem {
             
         };
         //post add rental
-        loggingDispatcher.dispatchLoggingInterceptorPostMarshal(postRequestContext);
+        loggingDispatcher.dispatchLoggingInterceptorPostTargetRequest(postRequestContext);
         
         return "Rental added successfully";
     }

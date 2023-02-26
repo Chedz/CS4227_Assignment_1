@@ -23,14 +23,14 @@ public class TestInterceptor {
 
             private static final Logger LOGGER = Logger.getLogger(MovieRentalSystem.class.getName());
             
-            public void onPreMarshalRequest(PreRequestContext context) {
+            public void onPreRequest(PreRequestContext context) {
                 // start timer
                 context.startTimer();
                 // log call made to target method that is being intercepted
                 context.logCall();   
             }
             
-            public void onPostMarshalRequest(PostRequestContext context) {
+            public void onPostRequest(PostRequestContext context) {
                 // stop timer 
                 LOGGER.info("INFO: It took "+context.stopTimer()+" milliseconds to process the request \n"); 
             }

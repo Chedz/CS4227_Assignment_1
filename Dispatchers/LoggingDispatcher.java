@@ -21,7 +21,7 @@ public class LoggingDispatcher implements LoggingInterceptor{
         interceptors_.removeElement(i);
     }
 
-    public void dispatchLoggingInterceptorPreMarshal( PreRequestContext context) {
+    public void dispatchLoggingInterceptorPreTargetRequest( PreRequestContext context) {
         Vector interceptors;
         
         synchronized (this) {
@@ -30,11 +30,11 @@ public class LoggingDispatcher implements LoggingInterceptor{
     
         for(int i = 0; i < interceptors.size(); i++) {
             LoggingInterceptor ic = (LoggingInterceptor)interceptors.elementAt(i);
-            ic.onPreMarshalRequest(context);
+            ic.onPreRequest(context);
         }
     }
 
-    public void dispatchLoggingInterceptorPostMarshal( PostRequestContext context) {
+    public void dispatchLoggingInterceptorPostTargetRequest( PostRequestContext context) {
         Vector interceptors;
         
         synchronized (this) {
@@ -43,23 +43,23 @@ public class LoggingDispatcher implements LoggingInterceptor{
     
         for(int i = 0; i < interceptors.size(); i++) {
             LoggingInterceptor ic = (LoggingInterceptor)interceptors.elementAt(i);
-            ic.onPostMarshalRequest(context);
+            ic.onPostRequest(context);
         }
     }
 
     @Override
-    public void onPostMarshalRequest(PostRequestContext context) {
+    public void onPostRequest(PostRequestContext context) {
         for (int i = 0; i < interceptors_.size(); i++) {
             LoggingInterceptor interceptor = (LoggingInterceptor) interceptors_.elementAt(i);
-            interceptor.onPostMarshalRequest(context);
+            interceptor.onPostRequest(context);
         }
     }
 
     @Override
-    public void onPreMarshalRequest(PreRequestContext context) {
+    public void onPreRequest(PreRequestContext context) {
         for (int i = 0; i < interceptors_.size(); i++) {
             LoggingInterceptor interceptor = (LoggingInterceptor) interceptors_.elementAt(i);
-            interceptor.onPreMarshalRequest(context);
+            interceptor.onPreRequest(context);
         }
     }
 }

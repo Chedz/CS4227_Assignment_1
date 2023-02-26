@@ -16,13 +16,13 @@ public class App {
         // Define concrete logging interceptor
         LoggingInterceptor interceptor = new LoggingInterceptor() {
             private static final Logger LOGGER = Logger.getLogger(MovieRentalSystem.class.getName());
-            public void onPreMarshalRequest(PreRequestContext context) {
+            public void onPreRequest(PreRequestContext context) {
                 // start timer
                 context.startTimer();
                 context.logCall();   
             }
             
-            public void onPostMarshalRequest(PostRequestContext context) {
+            public void onPostRequest(PostRequestContext context) {
                 // stop timer
                 System.out.println("INFO: It took "+context.stopTimer()+" milliseconds to process the request \n");  
             }
