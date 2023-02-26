@@ -4,18 +4,22 @@ import MovieRentalSystem.Movie;
 import MovieRentalSystem.MovieRentalSystem;
 import ContextObjects.PreRequestContext;
 import ContextObjects.PostRequestContext;
+import java.util.logging.Logger;
 
 
 public class App {
+    private static final Logger LOGGER = Logger.getLogger(MovieRentalSystem.class.getName());
     public static void main(String[] args) {
         //Create Movie Rental System 
         MovieRentalSystem movieRentalSystem = new MovieRentalSystem();
         
         // Define concrete logging interceptor
         LoggingInterceptor interceptor = new LoggingInterceptor() {
+            private static final Logger LOGGER = Logger.getLogger(MovieRentalSystem.class.getName());
             public void onPreMarshalRequest(PreRequestContext context) {
                 // start timer
-                context.startTimer();   
+                context.startTimer();
+                context.logCall();   
             }
             
             public void onPostMarshalRequest(PostRequestContext context) {
@@ -26,6 +30,7 @@ public class App {
 
         //Register Logging Interceptor With Dispatcher
         movieRentalSystem.getLoggingDispatcherInstance().registerLoggingInterceptor(interceptor);
+
 
         Customer customer = movieRentalSystem.createCustomer("John");
 

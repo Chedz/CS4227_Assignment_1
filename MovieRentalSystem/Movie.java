@@ -1,7 +1,5 @@
 package MovieRentalSystem;
 
-import ContextObjects.PostRequestContext;
-
 public class Movie {
     public static final int CHILDRENS = 2;
     public static final int REGULAR = 0;
@@ -10,7 +8,6 @@ public class Movie {
     private Price _price;
 
     public Movie(String title, int priceCode) {
-        //create context object in the constructor?
         _title = title;
         setPriceCode(priceCode);
     }
@@ -19,12 +16,7 @@ public class Movie {
         return _price.getPriceCode();
     }
 
-    public void setPriceCode(int arg) { //interception point?
-        //call dispatcher -> pass reference to the context object
-        //dispatcher calls concrete interecptor (logger)    //logger can only talk to one class (context object)
-
-
-        //call dispatcher here
+    public void setPriceCode(int arg) { 
         switch (arg) {        
             case REGULAR:          
                 _price = new RegularPrice();           

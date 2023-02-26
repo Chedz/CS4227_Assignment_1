@@ -3,19 +3,18 @@ package MovieRentalSystem;
 import ContextObjects.PostRequestContext;
 import ContextObjects.PreRequestContext;
 import Dispatchers.LoggingDispatcher;
+import java.util.logging.Logger;
 
 public class MovieRentalSystem {
     private static final LoggingDispatcher loggingDispatcher =  new LoggingDispatcher();
     private long timeMilliseconds;
+    private static final Logger LOGGER = Logger.getLogger(MovieRentalSystem.class.getName());
 
     public LoggingDispatcher getLoggingDispatcherInstance(){
         return loggingDispatcher;
     }
 
-
     public Movie createMovie(String name, int priceCode){
-
-        System.out.println("[LOG]: " + "MovieRentalSystem.createMovie() called creating new Movie: " + name + " with priceCode: " + priceCode + "");
 
         //Pre Movie Creation Context object creation
         PreRequestContext preMovieCreationContext = new PreRequestContext() {
@@ -23,6 +22,12 @@ public class MovieRentalSystem {
             @Override
             public void startTimer() {
                 timeMilliseconds = System.currentTimeMillis();
+            }
+
+            @Override
+            public void logCall() {
+                // System.out.println("[LOG]: " + "MovieRentalSystem.createMovie() called creating new Movie: " + name + " with priceCode: " + priceCode + "");
+                LOGGER.info("MovieRentalSystem.createMovie() called creating new Movie: " + name + " with priceCode: " + priceCode + "");
             }
             
         };
@@ -44,7 +49,7 @@ public class MovieRentalSystem {
     }
 
     public Customer createCustomer(String name ){
-        System.out.println("[LOG]: " + "Adding new Customer: " + name );
+        //System.out.println("[LOG]: " + "Adding new Customer: " + name );
 
         //Pre create customer context object creation
         PreRequestContext createCustomerContext = new PreRequestContext() {
@@ -52,6 +57,11 @@ public class MovieRentalSystem {
             @Override
             public void startTimer() {
                 timeMilliseconds = System.currentTimeMillis();
+            }
+
+            @Override
+            public void logCall() {
+                LOGGER.getLogger(MovieRentalSystem.class.getName()).info("Adding new Customer: " + name);
             }
             
         };
@@ -85,25 +95,29 @@ public class MovieRentalSystem {
 
     public String addRental(Customer customer, Rental rental ){
 
-        System.out.println("[LOG]: " + "MovieRentalSystem.addRental() called adding new Rental to Customer: " + customer.getName() + " with Movie: " + rental.getMovie().getTitle() + " for " + rental.getDaysRented() + " days");
-
         PreRequestContext addRentalContext = new PreRequestContext() {
 
             @Override
             public void startTimer() {
                 timeMilliseconds = System.currentTimeMillis();
             }
+
+            @Override
+            public void logCall() {
+                LOGGER.getLogger(MovieRentalSystem.class.getName()).info("MovieRentalSystem.addRental() called adding new Rental to Customer: " + customer.getName() + " with Movie: " + rental.getMovie().getTitle() + " for " + rental.getDaysRented() + " days");
+            }
             
         };
         loggingDispatcher.onPreMarshalRequest(addRentalContext);
 
         //print frequent renter points before request
-        System.out.println("[LOG]: " + "Initial Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
+        LOGGER.getLogger(MovieRentalSystem.class.getName()).info("Initial Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
         try {
             customer.addRental(rental);
             //print frequent renter points after request
-            System.out.println("[LOG]: " + "Updated Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
+            LOGGER.getLogger(MovieRentalSystem.class.getName()).info("Updated Frequent Renter Points: " + customer.getTotalFrequentRenterPoints());
         } catch (Exception e) {
+            LOGGER.getLogger(MovieRentalSystem.class.getName()).warning((e.getMessage()));
             return e.getMessage();
         }
 
@@ -122,12 +136,13 @@ public class MovieRentalSystem {
     }
 
     public String getStringStatement(Customer customer ){
-        System.out.println("[LOG]: " + "MovieRentalSystem.getStringStatement() called for Customer: " + customer.getName() );
+        LOGGER.getLogger(MovieRentalSystem.class.getName()).info("MovieRentalSystem.getStringStatement() called for Customer: " + customer.getName() );
 
         return customer.statement();
     }
 
     public int getFrequentRenterPoints(Customer customer ){
+        LOGGER.getLogger(MovieRentalSystem.class.getName()).info("MovieRentalSystem.getFrequentRenterPoints() called for Customer: " + customer.getName() );
 
         return customer.getTotalFrequentRenterPoints();
     }
